@@ -8,9 +8,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/test_helpers.sh"
 
-# Opt out for fast iteration loops: SKIP_E2E=1 make smoke-skills-add-e2e
-if [ "${SKIP_E2E:-0}" = "1" ]; then
-  echo "skills add e2e smoke: skipped (SKIP_E2E=1)"
+# Opt out when offline or for fast iteration loops:
+#   WAZA_SMOKE_OFFLINE=1 make smoke-skills-add-e2e
+if [ "${WAZA_SMOKE_OFFLINE:-0}" = "1" ]; then
+  echo "skills add e2e smoke: skipped (WAZA_SMOKE_OFFLINE=1)"
   exit 0
 fi
 
