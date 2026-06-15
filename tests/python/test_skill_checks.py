@@ -193,6 +193,18 @@ def test_codex_plugin_happy_path(tmp_path, capsys):
     assert "ok: Codex plugin manifest pinned to 1.2.3" in capsys.readouterr().out
 
 
+def test_codex_plugin_ignores_local_cache_files(tmp_path, capsys):
+    write_codex_manifest(tmp_path)
+    cache_dir = tmp_path / "skills" / "check" / "__pycache__"
+    cache_dir.mkdir()
+    (cache_dir / "SKILL.cpython-314.pyc").write_bytes(b"cache")
+    (tmp_path / "rules" / ".DS_Store").write_bytes(b"noise")
+
+    check_codex_plugin(tmp_path, "1.2.3")
+
+    assert "ok: Codex plugin manifest pinned to 1.2.3" in capsys.readouterr().out
+
+
 def test_codex_plugin_rejects_version_drift(tmp_path, capsys):
     write_codex_manifest(tmp_path, version="0.0.0")
     with pytest.raises(SystemExit):

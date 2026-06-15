@@ -85,14 +85,35 @@ def test_build_codex_plugin_manifest_shape():
     assert len(manifest["interface"]["defaultPrompt"]) <= 3
 
 
-def test_build_codex_marketplace_points_at_repo_root():
+def test_build_codex_marketplace_points_at_plugin_root():
     marketplace = bm.build_codex_marketplace()
     assert marketplace["name"] == "waza"
     entry = marketplace["plugins"][0]
     assert entry["name"] == "waza"
-    assert entry["source"] == {"source": "local", "path": "./"}
+    assert entry["source"] == {"source": "local", "path": "./plugins/waza"}
     assert entry["policy"] == {
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL",
     }
     assert entry["category"] == "Developer Tools"
+
+
+def test_collect_codex_plugin_tree_ignores_local_cache_files(tmp_path):
+    skill_script_dir = tmp_path / "skills" / "check" / "scripts"
+    skill_script_dir.mkdir(parents=True)
+    (skill_script_dir / "run.py").write_text("print('ok')\n")
+    cache_dir = skill_script_dir / "__pycache__"
+    cache_dir.mkdir()
+    (cache_dir / "run.cpython-314.pyc").write_bytes(b"cache")
+
+    rules_dir = tmp_path / "rules"
+    rules_dir.mkdir()
+    (rules_dir / "waza-routing.md").write_text("routing\n")
+    (rules_dir / ".DS_Store").write_bytes(b"noise")
+
+    tree = bm.collect_codex_plugin_tree(tmp_path, "{}\n")
+
+    assert "plugins/waza/skills/check/scripts/run.py" in tree
+    assert "plugins/waza/rules/waza-routing.md" in tree
+    assert all("__pycache__" not in path for path in tree)
+    assert all(not path.endswith((".pyc", ".DS_Store")) for path in tree)

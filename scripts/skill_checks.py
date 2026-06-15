@@ -59,6 +59,19 @@ ATTRIBUTION_PATTERNS = (
     "noreply@anthropic.com",
     "cursoragent@cursor.com",
 )
+CODEX_MIRROR_IGNORED_DIRS = {
+    "__pycache__",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+}
+CODEX_MIRROR_IGNORED_NAMES = {
+    ".DS_Store",
+}
+CODEX_MIRROR_IGNORED_SUFFIXES = {
+    ".pyc",
+    ".pyo",
+}
 
 
 def pipe_count(s: str) -> int:
@@ -73,6 +86,14 @@ def pipe_count(s: str) -> int:
             n += 1
         i += 1
     return n
+
+
+def should_include_codex_mirror_file(path: Path) -> bool:
+    if any(part in CODEX_MIRROR_IGNORED_DIRS for part in path.parts):
+        return False
+    if path.name in CODEX_MIRROR_IGNORED_NAMES:
+        return False
+    return path.suffix not in CODEX_MIRROR_IGNORED_SUFFIXES
 
 
 def check_skill_files(root: Path):
@@ -278,7 +299,10 @@ def check_codex_plugin(root: Path, expected_version: str):
         for source_path in sorted(source_root.rglob("*")):
             if not source_path.is_file():
                 continue
-            mirror_path = mirror_root / source_path.relative_to(source_root)
+            source_rel = source_path.relative_to(source_root)
+            if not should_include_codex_mirror_file(source_rel):
+                continue
+            mirror_path = mirror_root / source_rel
             if not mirror_path.exists():
                 fail(
                     f"CODEX PLUGIN MIRROR MISSING: {mirror_path.relative_to(root)} "

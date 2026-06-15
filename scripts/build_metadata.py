@@ -80,6 +80,19 @@ CODEX_DESCRIPTION = (
     "Engineering workflow skills for Codex: think, check, hunt, design, read, "
     "write, learn, and health."
 )
+CODEX_MIRROR_IGNORED_DIRS = {
+    "__pycache__",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+}
+CODEX_MIRROR_IGNORED_NAMES = {
+    ".DS_Store",
+}
+CODEX_MIRROR_IGNORED_SUFFIXES = {
+    ".pyc",
+    ".pyo",
+}
 
 
 def read_version(root: Path) -> str:
@@ -348,9 +361,20 @@ def collect_codex_plugin_tree(root: Path, plugin_manifest_rendered: str) -> dict
         for path in sorted(source_root.rglob("*")):
             if not path.is_file():
                 continue
+            source_rel = path.relative_to(source_root)
+            if not should_include_codex_mirror_file(source_rel):
+                continue
             rel = path.relative_to(root).as_posix()
             generated[f"plugins/waza/{rel}"] = path.read_bytes()
     return generated
+
+
+def should_include_codex_mirror_file(path: Path) -> bool:
+    if any(part in CODEX_MIRROR_IGNORED_DIRS for part in path.parts):
+        return False
+    if path.name in CODEX_MIRROR_IGNORED_NAMES:
+        return False
+    return path.suffix not in CODEX_MIRROR_IGNORED_SUFFIXES
 
 
 def main() -> int:
@@ -438,6 +462,9 @@ def main() -> int:
             expected_paths = set(codex_plugin_tree)
             for path in sorted(codex_plugin_root.rglob("*")):
                 if not path.is_file():
+                    continue
+                plugin_rel = path.relative_to(codex_plugin_root)
+                if not should_include_codex_mirror_file(plugin_rel):
                     continue
                 rel = path.relative_to(root).as_posix()
                 if rel not in expected_paths:
