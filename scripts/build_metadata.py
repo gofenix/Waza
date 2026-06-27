@@ -47,9 +47,10 @@ CLAUDE_MARKETPLACE_TOP = {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "waza",
     "description": (
-        "Personal skill collection for Claude Code, Codex, Antigravity, "
-        "OpenCode, and Pi: think, check, hunt, design, read, write, learn, "
-        "and health for agent config and AI maintainability audits."
+        "中文优先的工程技能合集，适用于 Claude Code、Codex、"
+        "Antigravity、OpenCode 和 Pi：think、check、hunt、design、"
+        "read、write、learn、health，覆盖方案、审查、调试、设计、"
+        "阅读、写作、研究和 agent health 审计。"
     ),
     "owner": {
         "name": "Tw93",
@@ -58,11 +59,11 @@ CLAUDE_MARKETPLACE_TOP = {
 }
 
 BUNDLE_DESCRIPTION = (
-    "Installs the full Waza toolkit. Registers all eight skills under the "
-    "waza namespace, callable as /waza:think, /waza:check, /waza:hunt, "
-    "/waza:design, /waza:read, /waza:write, /waza:learn, and /waza:health. "
-    "For one skill on Claude Code v2.1.143 or newer, use /plugin install "
-    "waza-<name>@waza."
+    "安装完整 Waza 工具集，在 waza namespace 下注册八个技能："
+    "/waza:think、/waza:check、/waza:hunt、/waza:design、"
+    "/waza:read、/waza:write、/waza:learn 和 /waza:health。"
+    "Claude Code v2.1.143 或更新版本可用 /plugin install "
+    "waza-<name>@waza 单独安装一个技能。"
 )
 
 CATEGORY = "development"
@@ -77,8 +78,8 @@ AUTHOR = {
 }
 
 CODEX_DESCRIPTION = (
-    "Engineering workflow skills for Codex: think, check, hunt, design, read, "
-    "write, learn, and health."
+    "Codex 工程工作流技能：think、check、hunt、design、read、write、"
+    "learn 和 health。"
 )
 CODEX_MIRROR_IGNORED_DIRS = {
     "__pycache__",
@@ -178,13 +179,12 @@ def build_codex_plugin(version: str) -> dict:
         "skills": "./skills/",
         "interface": {
             "displayName": "Waza",
-            "shortDescription": "Engineering workflow skills for Codex",
+            "shortDescription": "Codex 的中文优先工程工作流技能",
             "longDescription": (
-                "Waza packages eight engineering habits as Codex skills: "
-                "think for planning, check for review, hunt for debugging, "
-                "design for frontend work, read for source intake, write for "
-                "prose, learn for domain research, and health for agent "
-                "configuration audits."
+                "Waza 把八个工程习惯打包成 Codex skills：think 做方案，"
+                "check 做审查和发布门禁，hunt 做根因调试，design 做前端和视觉，"
+                "read 读取 URL/PDF，write 打磨文案，learn 研究陌生领域，"
+                "health 审计 agent 配置和 AI 可维护性。"
             ),
             "developerName": "Tw93",
             "category": CODEX_CATEGORY,
@@ -194,9 +194,9 @@ def build_codex_plugin(version: str) -> dict:
             ],
             "websiteURL": HOMEPAGE,
             "defaultPrompt": [
-                "Use Waza think to plan this change",
-                "Use Waza check to review this diff",
-                "Use Waza hunt to debug this failure",
+                "用 Waza think 规划这个改动",
+                "用 Waza check 审查这个 diff",
+                "用 Waza hunt 排查这个失败",
             ],
             "brandColor": "#111827",
         },
@@ -231,8 +231,8 @@ def build_package_json(version: str) -> str:
         "name": "@tw93/waza",
         "version": version,
         "description": (
-            "Waza engineering skills for Claude Code, Codex, Antigravity, "
-            "OpenCode, Pi, and compatible coding agents."
+            "中文优先的 Waza 工程技能，适用于 Claude Code、Codex、"
+            "Antigravity、OpenCode、Pi 和兼容 coding agents。"
         ),
         "license": "MIT",
         "repository": {

@@ -1,34 +1,31 @@
-# Design Reference: Data Visualization
+# Data Visualization
 
-Load this only when the surface is a dashboard, analytics view, chart-heavy interface, or any number-dense data display. Marketing pages, landing pages, and generic component work do not need it.
+数据可视化先服务比较和判断，再服务美观。
 
-## Dashboard defaults
+## 选择图表
 
-Dashboards are utility surfaces: orient the user, show status, enable action. No hero sections, no marketing copy. Every element must earn its place by answering a question the user has.
-
-- Primary layout: status summary at top, detail below; or sidebar filters + main chart area.
-- Whitespace: tighter than marketing pages; users scan, not read. Use generous column spacing, not generous row height.
-- Number density: many numbers on screen at once is not a problem. Crowding without alignment is. Use `font-variant-numeric: tabular-nums` for all numeric columns. Right-align numbers. Left-align labels.
-
-## Chart selection
-
-| Use case | Chart type |
+| Goal | Chart |
 |---|---|
-| Comparing values across categories | Bar chart (horizontal if labels are long) |
-| Trend over time | Line chart; avoid bars for time series with many points |
-| Part-whole relationships | Treemap (6+ segments) or stacked bar; pie only for 2-4 segments |
-| Distribution | Histogram or box plot; never pie chart |
-| Correlation | Scatter plot; do not use line chart |
+| 比较类别 | bar chart |
+| 看趋势 | line chart |
+| 看组成 | stacked bar，少用 pie |
+| 看分布 | histogram、box plot |
+| 看相关 | scatter |
+| 看流程或路径 | Sankey、flow、timeline |
 
-Pie charts with more than 4 segments communicate nothing. Use a treemap or ranked list instead.
+## 规则
 
-## Number-dense interfaces
+- 坐标轴、单位、时间范围必须可见。
+- 颜色用于含义，不用于装饰。
+- 同一页面里的同一指标使用同一颜色。
+- 不截断 y 轴，除非明确标注。
+- 图例靠近数据，避免用户来回扫。
+- 移动端优先展示最关键序列，其他序列折叠或切换。
 
-- `font-variant-numeric: tabular-nums` on every number column so digits align vertically.
-- Right-align all numbers; left-align all text labels. Mixed alignment in the same column is always wrong.
-- Subtle row separators: `1px` line at `rgba(0,0,0,0.06)` (light) or `rgba(255,255,255,0.05)` (dark). Alternating row backgrounds only if the table is very wide (12+ columns).
-- Column spacing: at least `16px` between adjacent columns; more between logically distinct groups.
+## 文案
 
-## Using a product as a benchmark
+标题写结论，不写图表类型。例如“错误率在 3 月后下降”，不要写“错误率折线图”。
 
-When the user references a product for visual benchmark ("make it feel like Grafana" / "similar to Linear analytics"): extract 3-5 concrete data-visualization-specific properties from that product, not general aesthetic properties. Useful properties: chart color palette (exact values), grid line weight and opacity, axis label size and color, tooltip border-radius and shadow, empty-state treatment. Do not extract "minimal" or "clean" as properties; those are not actionable.
+## 验证
+
+检查空数据、单点数据、极端长 label、负数、单位混合和色盲可辨性。

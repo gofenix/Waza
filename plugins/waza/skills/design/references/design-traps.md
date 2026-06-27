@@ -1,43 +1,22 @@
-# Design Traps and Anti-Patterns
+# Design Traps
 
-## Common Default Traps
+常见失败和替代做法。
 
-Before submitting, check whether any of the following slipped in without intention:
+| Trap | Better |
+|---|---|
+| 用渐变/orb/bokeh 填空 | 用真实内容、结构、图片或交互状态承载视觉 |
+| 卡片套卡片 | 让 section 无框，卡片只用于重复实体或 modal |
+| 所有按钮都写文字 | 常见工具动作使用图标 + tooltip |
+| 文字挤不下就缩小 | 改布局、换行、缩短 copy 或给稳定宽度 |
+| hero 只放抽象 SVG | 用真实/生成位图或沉浸式场景 |
+| 工具型产品做成营销页 | 直接呈现工作台、列表、编辑器或核心任务 |
+| 颜色只用一个色相 | 增加中性色、语义色和材质层级 |
+| 状态切换改字号 | 保持字号稳定，用颜色、边框、图标区分 |
 
-- A purple or blue gradient over white as the hero background
-- A three-part hero: large headline, one-line subtext, two CTA buttons side by side
-- A grid of cards with identical rounded corners, identical drop shadows, identical padding
-- A top navigation bar with logo left, links center, primary action far right
-- Sections that alternate between white and `#f9f9f9`
-- A centered icon or illustration sitting above a heading above a paragraph
-- A four-column footer with equal-weight columns
+CSS 注意：
 
-Any of these can appear if they serve the design intentionally. They cannot appear by default.
-
-Final test: if you swapped in completely different content and the layout still made sense without changes, you built a template, not a design. Redo it.
-
-## Absolute Bans (CSS-Pattern Level)
-
-| Pattern | Why | Rewrite |
-|---|---|---|
-| `border-left` or `border-right` wider than 1px as a section accent | The single most overused design touch in admin UIs | Use a colored dot, a short horizontal rule, a background swatch, or a typographic weight shift |
-| `background-clip: text` gradient text | Decorative and illegible in high-contrast mode | Use a solid brand color or typographic weight for emphasis |
-| `backdrop-filter: blur` glassmorphism as default card surface | Expensive on low-power devices; overused | Use elevated surfaces via background color steps and `box-shadow` |
-| Purple-to-blue gradients or cyan-on-dark accent systems | The canonical AI design palette; communicates nothing about the brand | Pick a palette from the brand words via OKLCH rules |
-| Generic rounded-rect card with `box-shadow` as the default container | Template thinking | Default to cardless sections; only add card treatment when content type requires it |
-| Modals as lazy escape for overflow UI | Interrupts flow and breaks browser back navigation | Inline expand, detail panel, or dedicated route; modals only when action truly requires focus-lock |
-| `transition: all` or animating width/height/padding/margin | Forces browser into layout recalculation on every frame | List exact properties; use `grid-template-rows: 0fr to 1fr` for height reveals |
-
-## AI Slop Test
-
-Would a stranger glancing at the first viewport say "an AI made this" immediately? If yes, the committed direction was not committed enough. Usual culprits: reflex font, default purple accent, centered hero with generic card grid beneath. Fix the typography, color system, or layout until the answer flips.
-
-## Content Authenticity
-
-Placeholder copy that looks real but is not real breaks the illusion. Apply these rules before handoff.
-
-**Sample data:** no generic names (John Doe, Jane Smith), no generic company names (Acme Corp, TechCorp), no Lorem Ipsum. Use organic numbers: `99.94%` not `99.99%`, `$99.00` not `$100.00`.
-
-**UI copy:** sentence case on all headings, no exclamation marks on success states, never "Oops!" on errors. Banned words: Elevate, Seamless, Unleash, Delve, Tapestry, Game-changer, Next-Gen.
-
-**Placeholders:** when a component is unavailable, use a labeled placeholder (grey rectangle, monogram wordmark, dashed border). Never draw illustrative imagery with inline SVG.
+- 避免 `height: 100vh` 导致移动端地址栏问题，优先 `min-height: 100dvh`。
+- fixed toolbar 要考虑 safe-area。
+- `overflow: hidden` 不能用来掩盖实际溢出。
+- grid/flex 子项需要 `min-width: 0` 才能正确收缩。
+- 绝对定位文本要检查窄屏和长文案。

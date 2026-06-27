@@ -1,14 +1,25 @@
-# Public Reply Shape (maintainer, issue or PR)
+# Public Reply
 
-Reusable by both Triage Mode and Ship / Release Follow-through. Default to this shape unless `AGENTS.md` or `CLAUDE.md` in the target repo contradicts it.
+用于 issue、PR、release comment 和 maintainer 回复。
 
-1. Resolve `@<login>` from `gh issue view` / `gh pr view --json author` before posting.
-2. **Language:** Match the **opener's** language when it is Chinese or English. If the opener used Japanese or Korean, use English for the maintainer reply unless project docs override.
-3. Open with `@<login>` and **at most one** short thanks (`感谢反馈`, `thank you for the report`, etc.). Do **not** add closing thanks stacks (`再次感谢`, `Thanks again`, long courtesy endings).
-4. One or two short paragraphs: factual reason, what shipped or what is blocked, no ceremony.
-5. Always give a **next step tied to releases or verification**: next App Store or GitHub release, nightly upgrade command, cache path to clear once, or exactly what info is still needed.
-6. Prefer **editing** an existing maintainer comment (`PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}`) when updating wording; avoid delete plus repost unless the old text must disappear from history.
+原则：
 
-## When closing
+- 先确认事实，再表达态度。
+- 短，具体，有下一步。
+- 不把内部推理、私有路径、token、机器状态或未公开上下文写出去。
+- 不承诺没有验证过的发布日期、性能数字或兼容范围。
+- 关闭 issue 时给出证据：commit、release、测试、复现结果或“needs info”。
 
-Close only when the fix is shipped, already available in the latest release, the report is invalid, the report is a duplicate, or the maintainer explicitly asked for closure. Otherwise leave open with the next-release acknowledgement.
+常用形态：
+
+```text
+Thanks for the report. I reproduced this with {command/version}. The fix is in {commit/PR}; it will be available in {release/version}.
+```
+
+```text
+I could not reproduce this yet. Please share {minimal info}. Without that, the next action would be guesswork.
+```
+
+```text
+This is outside the current scope because {one concrete boundary}. I am closing this to keep the tracker focused.
+```

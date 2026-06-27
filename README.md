@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://gw.alipayobjects.com/zos/k/2h/waza.svg" width="120" />
   <h1>Waza</h1>
-  <p><b>Engineering habits you already know, turned into skills AI agents can run.</b></p>
+  <p><b>把工程师已经知道的好习惯，变成 AI agent 能执行的技能。</b></p>
   <a href="https://github.com/tw93/Waza/actions/workflows/test.yml"><img src="https://img.shields.io/github/actions/workflow/status/tw93/Waza/test.yml?branch=main&style=flat-square&label=tests" alt="Tests"></a>
   <a href="https://github.com/tw93/Waza/stargazers"><img src="https://img.shields.io/github/stars/tw93/Waza?style=flat-square" alt="Stars"></a>
   <a href="https://github.com/tw93/Waza/releases"><img src="https://img.shields.io/github/v/tag/tw93/Waza?label=version&style=flat-square" alt="Version"></a>
@@ -11,15 +11,15 @@
 
 <br/>
 
-## Why
+## 为什么
 
-Waza (技, わざ) is a Japanese martial arts term for technique: a move practiced until it becomes instinct.
+Waza（技，わざ）是日语里的“技法”：反复练到接近本能的动作。
 
-A good engineer does not just write code. They think through requirements, review their own work, debug systematically, design interfaces that feel intentional, and read primary sources. They write clearly, and learn new domains by producing output, not consuming content.
+好的工程师不只是写代码。他会先想清楚需求，审查自己的改动，系统地定位问题，设计有判断力的界面，阅读一手资料，也会把复杂事情写清楚、学透一个新领域。
 
-AI is more capable than most engineers at raw output. But without structure, that capability drifts into generic, imprecise work. Waza channels it into precision: eight skills that set clear goals and constraints, then let the model do what it does best.
+AI 很擅长产出，但没有结构时容易滑向泛泛而谈。Waza 做的事很简单：把八个工程习惯变成可调用技能，让模型在明确目标、边界和证据要求里工作。
 
-Part of a trilogy: [Kaku](https://github.com/tw93/Kaku) (書く) writes code, [Waza](https://github.com/tw93/Waza) (技) drills habits, [Kami](https://github.com/tw93/Kami) (紙) ships documents. Think of them as a family: Kaku is the dad, Waza the big sister, Kami the little sister.
+它和 [Kaku](https://github.com/tw93/Kaku)（書く）以及 [Kami](https://github.com/tw93/Kami)（紙）是一组工具：Kaku 写代码，Waza 练工程习惯，Kami 做可交付文档。
 
 <div align="center">
   <img src="https://gw.alipayobjects.com/zos/k/qa/waza_repaired_v4.svg" width="1000" />
@@ -27,24 +27,24 @@ Part of a trilogy: [Kaku](https://github.com/tw93/Kaku) (書く) writes code, [W
 
 ## Skills
 
-Each engineering habit gets an installed skill. In Claude Code, type the slash command. In Codex, invoke the installed skill by name and follow the same playbook.
+每个技能都是一个工程习惯。Claude Code 里可以直接输入 slash command；Codex 或其他 agent 里按技能名调用即可。
 
-| Skill | When | What it does |
+| Skill | 什么时候用 | 它做什么 |
 | :--- | :--- | :--- |
-| [`/think`](skills/think/SKILL.md) | Before building anything new | Challenges the problem, pressure-tests the design, and produces a decision-complete plan another agent can implement. |
-| [`/design`](skills/design/SKILL.md) | Building frontend interfaces | Produces distinctive UI, including screenshot-driven aesthetic iteration, with a committed direction rather than generic defaults. |
-| [`/check`](skills/check/SKILL.md) | After a task, before merging or release | Reviews the diff, extracts project-specific constraints, handles approved release/publish/push/reaction follow-through, and verifies with evidence. |
-| [`/hunt`](skills/hunt/SKILL.md) | Any bug, regression, or unexpected behavior | Systematic debugging. Root cause confirmed before any fix is applied, especially when something used to work. |
-| [`/write`](skills/write/SKILL.md) | Writing or editing prose | Rewrites prose to sound natural in Chinese and English. Cuts stiff, formulaic phrasing. |
-| [`/learn`](skills/learn/SKILL.md) | Diving into an unfamiliar domain | Six-phase research workflow: collect, digest, outline, fill in, refine, then self-review and publish. |
-| [`/read`](skills/read/SKILL.md) | Any URL or PDF | Reads URLs and PDFs with platform-specific routing. Plain reads return a concise summary; Markdown output is used when asked to convert, quote, cite, save, or feed downstream work. |
-| [`/health`](skills/health/SKILL.md) | Auditing Agent Health | Checks Codex, Claude Code, project instructions, verifier output, and AI maintainability with a budget-aware summary pass before deep inspection. |
+| [`/think`](skills/think/SKILL.md) | 新功能、架构决策、动手前 | 追问目标和取舍，压测方案，产出另一个 agent 可以直接实施的计划。 |
+| [`/design`](skills/design/SKILL.md) | 前端界面、组件、截图审美问题 | 做有方向感的 UI，包括基于真实截图的视觉迭代，避免默认模板感。 |
+| [`/check`](skills/check/SKILL.md) | 任务完成后、合并前、发布前 | 看 diff，提取项目约束，处理已批准的 commit/push/release/issue 收尾，并用证据验证。 |
+| [`/hunt`](skills/hunt/SKILL.md) | 报错、崩溃、回归、异常行为 | 先找到根因再修，尤其适合“以前可以，现在不行”的问题。 |
+| [`/write`](skills/write/SKILL.md) | 写作、改稿、去 AI 味 | 中英文文案改写和审阅，保留原意，让表达更自然。 |
+| [`/learn`](skills/learn/SKILL.md) | 研究陌生领域或多份材料 | 六阶段研究流：收集、消化、搭结构、填内容、打磨、自审到可发布。 |
+| [`/read`](skills/read/SKILL.md) | 任意 URL 或 PDF | 根据平台选择抓取方式。普通阅读给摘要，需要全文、引用、保存或下游处理时给 Markdown。 |
+| [`/health`](skills/health/SKILL.md) | Agent 配置、指令、验证面、维护性审计 | 检查 Codex、Claude Code、Pi、项目指令、验证输出和 AI 可维护性。 |
 
-Each skill is a folder with reference docs, helper scripts, and gotchas from real failures.
+每个技能文件夹里都有参考文档、辅助脚本和从真实失败里沉淀出的注意事项。
 
-## Install and Update
+## 安装和更新
 
-Most users should install Waza globally, so the same skills are available in every project.
+建议全局安装，这样每个项目都能使用同一套技能。
 
 **Claude Code**
 
@@ -52,7 +52,7 @@ Most users should install Waza globally, so the same skills are available in eve
 npx skills add tw93/Waza -a claude-code -g -y
 ```
 
-This installs `/think`, `/design`, `/check`, `/hunt`, `/write`, `/learn`, `/read`, and `/health`. Install just one with `npx skills add tw93/Waza --skill think -a claude-code -g -y`.
+这会安装 `/think`、`/design`、`/check`、`/hunt`、`/write`、`/learn`、`/read` 和 `/health`。只装单个技能可以用 `npx skills add tw93/Waza --skill think -a claude-code -g -y`。
 
 **Codex**
 
@@ -61,8 +61,8 @@ codex plugin marketplace add tw93/Waza
 codex plugin add waza@waza
 ```
 
-This installs Waza as a Codex plugin from the repo marketplace, so future updates can use `codex plugin marketplace upgrade waza` followed by `codex plugin add waza@waza`.
-If you prefer the legacy skills installer, use `npx skills add tw93/Waza -a codex -g -y`; install just one with `npx skills add tw93/Waza --skill think -a codex -g -y`.
+这会从仓库 marketplace 安装 Waza Codex 插件。后续更新用 `codex plugin marketplace upgrade waza`，再运行 `codex plugin add waza@waza` 刷新本地快照。
+如果你仍想用旧的 skills installer，可以运行 `npx skills add tw93/Waza -a codex -g -y`；单技能安装用 `npx skills add tw93/Waza --skill think -a codex -g -y`。
 
 **Antigravity**
 
@@ -71,7 +71,7 @@ npx skills add tw93/Waza -a antigravity -g -y
 npx skills add tw93/Waza -a antigravity-cli -g -y
 ```
 
-Use `antigravity` for the desktop app and `antigravity-cli` for the terminal agent. Both use Waza's standard `skills/<name>/SKILL.md` layout through the skills installer.
+`antigravity` 对应桌面端，`antigravity-cli` 对应终端 agent。两者都使用标准 `skills/<name>/SKILL.md` 布局。
 
 **OpenCode**
 
@@ -79,20 +79,20 @@ Use `antigravity` for the desktop app and `antigravity-cli` for the terminal age
 npx skills add tw93/Waza -a opencode -g -y
 ```
 
-OpenCode loads Waza through its native skill tool after installation. Invoke the skills by name when the task matches `think`, `design`, `check`, `hunt`, `write`, `learn`, `read`, or `health`.
+安装后 OpenCode 会通过原生 skill 工具加载 Waza。任务匹配时按 `think`、`design`、`check`、`hunt`、`write`、`learn`、`read` 或 `health` 调用。
 
-**Claude Code plugin marketplace** (single-skill entries require Claude Code v2.1.143+)
+**Claude Code plugin marketplace**（单技能入口需要 Claude Code v2.1.143+）
 
 ```bash
 /plugin marketplace add tw93/Waza
 /plugin install waza@waza
 ```
 
-This installs all eight skills. Install just one with `/plugin install waza-<name>@waza` (for example, `waza-think@waza`) on Claude Code v2.1.143 or newer.
+这会安装全部八个技能。Claude Code v2.1.143 或更新版本可以只装一个：`/plugin install waza-<name>@waza`，例如 `waza-think@waza`。
 
 **Claude Desktop**
 
-Download [waza.zip](https://github.com/tw93/Waza/releases/latest/download/waza.zip), open Customize > Skills > "+" > Create skill, and upload the ZIP.
+下载 [waza.zip](https://github.com/tw93/Waza/releases/latest/download/waza.zip)，在 Customize > Skills > "+" > Create skill 上传 ZIP。
 
 **Pi coding agent**
 
@@ -100,7 +100,7 @@ Download [waza.zip](https://github.com/tw93/Waza/releases/latest/download/waza.z
 pi install npm:@tw93/waza
 ```
 
-Pi can load Waza's standard `skills/<name>/SKILL.md` layout from the repo or from the published `@tw93/waza` npm package, which exposes `pi.skills` metadata pointing at `./skills`. `/health` audits Pi settings, configured packages, and local skill roots alongside Claude Code and Codex.
+Pi 可以从仓库或发布到 npm 的 `@tw93/waza` 包读取标准 `skills/<name>/SKILL.md` 布局。`/health` 会同时审计 Pi 设置、已配置包和本地 skill roots。
 
 **Update**
 
@@ -108,39 +108,39 @@ Pi can load Waza's standard `skills/<name>/SKILL.md` layout from the repo or fro
 npx skills update -g -y
 ```
 
-Marketplace installs use `claude plugin update <skill>`. Claude Desktop users can replace the old skill with the latest [waza.zip](https://github.com/tw93/Waza/releases/latest/download/waza.zip).
-Codex plugin installs use `codex plugin marketplace upgrade waza`, then `codex plugin add waza@waza` to refresh the installed plugin snapshot.
-Pi users can run `pi update npm:@tw93/waza`, or `pi update --extensions` to update all installed Pi packages.
-To hear about new versions, watch [GitHub Releases](https://github.com/tw93/Waza/releases) for Waza.
+Marketplace 安装用 `claude plugin update <skill>`。Claude Desktop 用户可以用最新 [waza.zip](https://github.com/tw93/Waza/releases/latest/download/waza.zip) 替换旧版本。
+Codex 插件安装用 `codex plugin marketplace upgrade waza`，再运行 `codex plugin add waza@waza`。
+Pi 用户可以运行 `pi update npm:@tw93/waza`，或用 `pi update --extensions` 更新全部扩展。
+想收到新版提醒，可以 watch [GitHub Releases](https://github.com/tw93/Waza/releases)。
 
-## Project Context
+## 项目上下文
 
-Waza keeps the generic programmer habits inside the public skill. `/check` becomes project-aware by reading the target repository's public context and the user's task constraints.
+Waza 把通用工程习惯放在公共技能里。`/check` 进入具体项目时，会从目标仓库的公开上下文和用户本轮约束里提取规则。
 
-- Project commands come from README files, package manifests, Makefiles, CI workflows, and explicit user instructions.
-- Project hard stops include generated artifacts, protected files, version synchronization, release assets, and domain-specific safety risks.
-- Public docs and examples must not include credentials, certificate paths, private key filenames, tokens, or personal machine details.
+- 项目命令来自 README、package manifest、Makefile、CI workflow 和用户明确说明。
+- 项目 hard stops 包括生成物、受保护文件、版本同步、release assets 和领域安全风险。
+- 公共文档和示例不能包含证书、私钥路径、token、个人机器路径或内部系统细节。
 
-See [`skills/check/references/project-context.md`](skills/check/references/project-context.md) for the review context template.
+Review context 模板见 [`skills/check/references/project-context.md`](skills/check/references/project-context.md)。
 
-## Chaining Skills
+## 技能串联
 
-Skills are designed to be chained together, but transitions are manual. Each skill stops after completing its task and waits for you to decide the next step.
+技能可以串起来用，但不会自动连锁。每个技能完成后都会停下，等你决定下一步。
 
-**Common workflows:**
+常见流程：
 
-- **Design a feature**: `/think` → approve → say "implement X" → `/check` → merge
-- **Ship a fix**: `/hunt` → fix → `/check` → release/publish/push/issue follow-through
-- **Research and write**: `/read` (fetch sources) → `/learn` (synthesize) → `/write` (polish)
-- **Debug and verify**: `/hunt` (find root cause) → fix → `/check` (review changes)
+- **设计功能**：`/think` -> approve -> say "implement X" -> `/check` -> merge
+- **修复问题**：`/hunt` -> fix -> `/check` -> release/publish/push/issue follow-through
+- **研究写作**：`/read` fetch sources -> `/learn` synthesize -> `/write` polish
+- **调试验证**：`/hunt` root cause -> fix -> `/check` review changes
 
-Each arrow represents a manual user action. Skills don't automatically trigger each other.
+每个箭头都代表一次用户动作。技能不会自行触发下一个技能。
 
 ## Extras
 
 ### Statusline
 
-A minimal statusline for Claude Code: context window, 5-hour quota, and 7-day quota. Color-coded by usage, no progress bars, no noise.
+Claude Code 的轻量 statusline：context window、5-hour quota 和 7-day quota。按用量上色，不做进度条，不加噪声。
 
 <div align="center">
   <img src="https://gw.alipayobjects.com/zos/k/y9/RUgevg.png" width="1000" />
@@ -150,7 +150,7 @@ A minimal statusline for Claude Code: context window, 5-hour quota, and 7-day qu
 curl -sL https://github.com/tw93/Waza/releases/latest/download/setup-statusline.sh | bash
 ```
 
-**Codex** has native statusline items. Add to `~/.codex/config.toml`:
+**Codex** 有原生 statusline 项。加入 `~/.codex/config.toml`：
 
 ```toml
 [tui]
@@ -158,11 +158,11 @@ status_line = ["model-with-reasoning", "current-dir", "context-used", "five-hour
 status_line_use_colors = true
 ```
 
-Codex shows remaining quota; the Claude Code statusline above shows used percentage (upstream does not yet expose `five-hour-used` / `weekly-used`).
+Codex 显示剩余额度；Claude Code statusline 显示已用百分比。
 
 ### English Coaching
 
-Optional rule for English practice. When your prompt contains an English mistake, the agent appends a short 😇 correction; Chinese-only prompts stay untouched.
+可选英语练习规则。你的英文提示有明显问题时，agent 会追加一条很短的 😇 correction；纯中文提示不触发。
 
 <div align="center">
   <img src="https://gw.alipayobjects.com/zos/k/24/vfkGOi.png" width="1000" />
@@ -178,23 +178,23 @@ curl -sL https://github.com/tw93/Waza/releases/latest/download/setup-rule.sh | b
 
 ### Anti-Patterns
 
-Optional always-on guardrails for cross-skill behaviors: stop acting before reading, no hallucinated paths, no scope creep, no unsolicited summaries. Skill-agnostic, applies in every session.
+可选的全局护栏：先读再动手、不幻觉路径、不偷换范围、不主动写无意义总结。它不属于某个技能，安装后每个会话都能生效。
 
 ```bash
 curl -sL https://github.com/tw93/Waza/releases/latest/download/setup-rule.sh | bash -s -- anti-patterns claude-code
 ```
 
-Use `codex` instead of `claude-code` for Codex. Curl URLs use the latest GitHub release asset. Set `WAZA_REF=main` before the command if you want bleeding-edge scripts.
+Codex 用 `codex` 替换 `claude-code`。Curl URLs use the latest GitHub release asset. Set `WAZA_REF=main` before the command if you want bleeding-edge scripts.
 
 ### Routing Hint
 
-Optional pointer that tells the host to prefer Waza skills when a request matches their triggers. Useful for Codex, Pi, and other agents that do not auto-route from skill `description`. Claude Code already routes through descriptions, so this is opt-in even there.
+可选路由提示：告诉宿主在用户请求匹配时优先使用 Waza skills。Codex、Pi 和其他不会自动根据 `description` 路由的 agent 会更需要它；Claude Code 已经能通过 description 路由，所以也是可选项。
 
 ```bash
 curl -sL https://github.com/tw93/Waza/releases/latest/download/setup-rule.sh | bash -s -- waza-routing claude-code
 ```
 
-Use `codex` instead of `claude-code` for Codex.
+Codex 用 `codex` 替换 `claude-code`。
 
 ## Uninstall
 
@@ -206,33 +206,14 @@ rm -f ~/.claude/rules/anti-patterns.md
 rm -f ~/.claude/rules/waza-routing.md
 ```
 
-For Claude Desktop, delete Waza from Customize > Skills. For Codex rule installs, remove the marked Waza blocks from `~/.codex/AGENTS.md`.
+Claude Desktop 里从 Customize > Skills 删除 Waza。Codex rule 安装需要删除 `~/.codex/AGENTS.md` 中标记的 Waza 区块。
 
 ## Background
 
-Tools like Superpowers and gstack are impressive but heavy: too many skills, too much configuration, too steep a learning curve.
+很多技能合集很强，但也容易太重：技能太多、配置太多、学习成本太高。
 
-Every rule the author writes is also a ceiling. The model can only do what the instructions say. Waza goes the other way: each skill sets a clear goal and the constraints that matter, then steps back. As models improve, that restraint pays compound interest.
+每写一条规则，也是在给模型设一个上限。Waza 的取向相反：每个技能只给清晰目标和关键约束，然后让模型发挥。随着模型变强，克制会带来复利。
 
-Eight skills for the habits that actually matter. Each does one thing, has a clear trigger, and stays out of the way. Built from real projects, refined through 300+ sessions across 7 projects. Every gotcha traces to a real failure.
+八个技能覆盖真正常用的工程习惯。每个技能只做一件事，有清楚触发词，也知道什么时候不该介入。它来自真实项目和上百轮使用中的失败修正。
 
-The `/health` skill grew from the six-layer Claude Code framework described in [this post](https://tw93.fun/en/2026-03-12/claude.html), and now covers Codex, Claude Code, Pi, verifier surfaces, and AI maintainability.
-
-## Support
-
-- The most direct way to support me is getting [Mole for Mac](https://mole.fit), my paid Mac cleanup app.
-- If Waza helped you, [share it](https://twitter.com/intent/tweet?url=https://github.com/tw93/Waza&text=Waza%20-%20AI%20coding%20skills%20for%20the%20complete%20engineer.) with friends or give it a star.
-- Got ideas or bugs? Open an issue or PR, feel free to contribute your best AI model.
-- I have two cats, TangYuan and Coke. If you think Waza delights your life, you can feed them <a href="https://cats.tw93.fun?name=Waza" target="_blank">canned food 🥩</a>.
-
-<details>
-<summary>These lovely people already did 🐱</summary>
-<br/>
-<div align="center">
-  <a href="https://cats.tw93.fun?name=Waza"><img src="https://cdn.jsdelivr.net/gh/tw93/sponsors@main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
-</div>
-</details>
-
-## License
-
-MIT License. Feel free to use Waza and contribute.
+`/health` 来自 [这篇 Claude Code 框架文章](https://tw93.fun/en/2026-03-12/claude.html) 的六层审计思路，现在覆盖 Codex、Claude Code、Pi、验证面和 AI 可维护性。

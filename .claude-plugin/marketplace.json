@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "waza",
-  "description": "Personal skill collection for Claude Code, Codex, Antigravity, OpenCode, and Pi: think, check, hunt, design, read, write, learn, and health for agent config and AI maintainability audits.",
+  "description": "中文优先的工程技能合集，适用于 Claude Code、Codex、Antigravity、OpenCode 和 Pi：think、check、hunt、design、read、write、learn、health，覆盖方案、审查、调试、设计、阅读、写作、研究和 agent health 审计。",
   "owner": {
     "name": "Tw93",
     "email": "hitw93@gmail.com"
@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "waza",
-      "description": "Installs the full Waza toolkit. Registers all eight skills under the waza namespace, callable as /waza:think, /waza:check, /waza:hunt, /waza:design, /waza:read, /waza:write, /waza:learn, and /waza:health. For one skill on Claude Code v2.1.143 or newer, use /plugin install waza-<name>@waza.",
+      "description": "安装完整 Waza 工具集，在 waza namespace 下注册八个技能：/waza:think、/waza:check、/waza:hunt、/waza:design、/waza:read、/waza:write、/waza:learn 和 /waza:health。Claude Code v2.1.143 或更新版本可用 /plugin install waza-<name>@waza 单独安装一个技能。",
       "version": "3.28.1",
       "category": "development",
       "source": "./",
@@ -17,7 +17,7 @@
     },
     {
       "name": "waza-check",
-      "description": "Reviews code diffs, PRs, issue queues, release readiness, commits, pushes, publishing, and project audits. Use when users ask review/看看代码/合并前/看看issue/PR/release/push or to implement an approved plan, with safety gates for dirty and untracked worktrees. Not for exploring ideas, debugging root causes, or prose review.",
+      "description": "审查代码 diff、PR、issue 队列、发布准备、commit、push、publish 和项目审计。Use when users ask review/看看代码/合并前/看看issue/PR/release/push or to implement an approved plan, with safety gates for dirty and untracked worktrees. Not for exploring ideas, debugging root causes, or prose review.",
       "version": "3.28.1",
       "category": "development",
       "source": "./skills/check",
@@ -29,7 +29,7 @@
     },
     {
       "name": "waza-design",
-      "description": "Produces distinctive, production-grade UI for pages, components, visual interfaces, typography, and screenshot-driven polish. Use when users ask 设计/做页面/做组件/UI/前端/截图 or say a screen is ugly, unclear, inconsistent, or visually wrong. Not for backend logic or data pipelines.",
+      "description": "做有方向感、可交付的 UI：页面、组件、视觉界面、字体排印和基于截图的 polish。Use when users ask 设计/做页面/做组件/UI/前端/截图 or say a screen is ugly, unclear, inconsistent, or visually wrong. Not for backend logic or data pipelines.",
       "version": "3.28.1",
       "category": "development",
       "source": "./skills/design",
@@ -40,8 +40,20 @@
       "strict": false
     },
     {
+      "name": "waza-handoff",
+      "description": "把当前会话压缩成一份交接文档，让新 agent 接手继续工作。Use when users ask handoff/交接/写交接文档/dump context/summarize session. Not for regular writing, editing, or de-AI tasks.",
+      "version": "3.28.1",
+      "category": "development",
+      "source": "./skills/handoff",
+      "homepage": "https://github.com/tw93/Waza",
+      "skills": [
+        "./"
+      ],
+      "strict": false
+    },
+    {
       "name": "waza-health",
-      "description": "Runs a budget-aware agent-assisted engineering health audit for instruction/config drift, hooks/MCP, verifier surfaces, and AI maintainability. Use when users ask 检查claude/检查codex/检查pi/配置检查/健康度 or report agents ignoring instructions, missing validation, or code becoming hard to maintain. Not for debugging code or reviewing PRs.",
+      "description": "做预算友好的 agent-assisted engineering health 审计，覆盖指令/配置漂移、hooks/MCP、验证面和 AI 可维护性。Use when users ask 检查claude/检查codex/检查pi/配置检查/健康度 or report agents ignoring instructions, missing validation, or code becoming hard to maintain. Not for debugging code or reviewing PRs.",
       "version": "3.28.1",
       "category": "development",
       "source": "./skills/health",
@@ -53,7 +65,7 @@
     },
     {
       "name": "waza-hunt",
-      "description": "Finds root cause before applying fixes for errors, crashes, regressions, failing tests, broken behavior, and screenshot-reported defects. Use when users ask 排查/报错/崩溃/不工作/回归/判断为什么报错, or say something used to work and now fails. Not for code review or new features.",
+      "description": "在修复前先找到错误、崩溃、回归、失败测试和异常行为的根因。Use when users ask 排查/报错/崩溃/不工作/回归/判断为什么报错, or say something used to work and now fails. Not for code review or new features.",
       "version": "3.28.1",
       "category": "development",
       "source": "./skills/hunt",
@@ -65,7 +77,7 @@
     },
     {
       "name": "waza-learn",
-      "description": "Runs a six-phase research workflow that turns unfamiliar domains, source bundles, or collected material into publish-ready output. Use when users ask 学习一下/深入研究/研究一下/整理成文章/deep dive/compile sources or need one coherent reference from many inputs. Not for quick lookups or single-file reads.",
+      "description": "用六阶段研究流程，把陌生领域、来源集合或已收集材料整理成可发布输出。Use when users ask 学习一下/深入研究/研究一下/整理成文章/deep dive/compile sources or need one coherent reference from many inputs. Not for quick lookups or single-file reads.",
       "version": "3.28.1",
       "category": "development",
       "source": "./skills/learn",
@@ -77,7 +89,7 @@
     },
     {
       "name": "waza-read",
-      "description": "Reads URLs and PDFs by fetching source content, defaulting to concise summaries for plain read requests and clean Markdown when asked to convert, save, quote, cite, or feed downstream work. Use when users ask 看这个链接/读一下/read this/check this URL. Not for local text files already in the repo.",
+      "description": "读取 URL 和 PDF，按来源选择抓取方法；普通阅读给简洁摘要，需要转换、保存、引用、cite 或交给下游工作时输出干净 Markdown. Use when users ask 看这个链接/读一下/read this/check this URL. Not for local text files already in the repo.",
       "version": "3.28.1",
       "category": "development",
       "source": "./skills/read",
@@ -89,7 +101,7 @@
     },
     {
       "name": "waza-think",
-      "description": "Turns rough ideas into approved, decision-complete plans with validated structure before coding. Use when users ask 出方案/给方案/深入分析/怎么设计/有没有必要/值不值得/plan this/how should I/should we keep this for features, architecture, or value judgments. Not for bug fixes or small edits.",
+      "description": "把粗略想法变成可批准、决策完整的实施计划。Use when users ask 出方案/给方案/深入分析/怎么设计/有没有必要/值不值得/plan this/how should I/should we keep this for features, architecture, or value judgments. Not for bug fixes or small edits.",
       "version": "3.28.1",
       "category": "development",
       "source": "./skills/think",
@@ -101,7 +113,7 @@
     },
     {
       "name": "waza-write",
-      "description": "Rewrites and polishes prose in Chinese or English, removes AI-like wording, and reviews product localization copy while preserving intent for drafts, docs, release notes, launch copy, and social posts. Use when users ask 帮我写/改稿/润色/去AI味/写一段/审稿/本地化文案/tweet/rewrite/proofread. Not for code comments, commit messages, or inline docs.",
+      "description": "改写和润色中英文自然语言，去掉 AI 味，审阅产品本地化文案，并保留原意。Use when users ask 帮我写/改稿/润色/去AI味/写一段/审稿/本地化文案/tweet/rewrite/proofread. Not for code comments, commit messages, or inline docs.",
       "version": "3.28.1",
       "category": "development",
       "source": "./skills/write",

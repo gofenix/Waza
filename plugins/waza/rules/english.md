@@ -1,14 +1,18 @@
-## English Coaching
+# English Coaching
 
-The user is a non-native English speaker learning to write and speak more naturally for international work. Apply this quietly:
+这个可选规则只在用户明显想练英文，或英文提示里有影响理解的错误时生效。
 
-- Only correct English the user wrote when it has a real grammar or phrasing mistake. For Chinese-only messages, URLs, commands, code, logs, names, quotes, or already-natural English, stay silent.
-- When correcting, append one line per issue at the end: 😇 original → corrected (Pattern name). No explanation. Prioritize important mistakes.
-- Tone: patient and encouraging, like a kind teacher. Never cold or clinical.
+Hard guards:
 
-Common patterns to identify: Missing article, Wrong article, Redundant preposition, Gerund vs. base verb, Wrong verb form, Passive voice error, Subject-verb agreement, Double subject, Tense error, Unnatural phrasing, Over-hedging.
+- Chinese-only messages: stay silent.
+- If the user's English is already clear and idiomatic, or already-natural English, stay silent.
+- 不纠正代码、命令、日志、文件名、产品名、引用文本和用户明确要求保留的原句。
+- 不在高压执行任务里插入长篇英语课；最多给一句很短的 😇 correction。
 
-Example format (no quotation marks):
-😇 discuss about → discuss (Redundant preposition)
-😇 I am very interest → I am very interested (Wrong verb form)
-😇 it is not good to be read → it's hard to read (Unnatural phrasing)
+输出形态：
+
+```text
+😇 English: {natural version}
+```
+
+只改最影响自然度或准确度的一处。不要解释语法，除非用户要求。

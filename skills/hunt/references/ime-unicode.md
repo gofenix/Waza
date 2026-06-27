@@ -1,58 +1,28 @@
-# IME / Unicode Debugging Reference
+# IME and Unicode
 
-Recurring patterns in Tauri and native macOS apps. Check these before forming a hypothesis.
+用于输入法、中文、emoji、全角半角、组合字符导致的问题。
 
-## IME State Desync
+检查：
 
-**Symptom**: Latin characters appear correctly but CJK input is dropped, doubled, or committed at the wrong time.
+- 字符串长度是 code unit、code point 还是 grapheme cluster。
+- 是否混用了 NFC/NFD。
+- 全角空格、不可见空白、零宽字符是否存在。
+- 输入法 composition 期间是否提前提交状态。
+- 光标位置是否按字节或 code unit 计算，导致中文错位。
 
-**Cause candidates**:
-- Input method switch mid-composition: the IME commits the preedit with a stale target, then the new mode processes the same keystrokes again.
-- `keydown` handler consuming events during active composition: check `event.isComposing` before acting on `keydown`/`keyup`. If `isComposing` is true, defer the action until `compositionend`.
-- Webview + native frame split focus: in Tauri, the webview and the native window title bar can hold focus simultaneously. A click on a native control during IME composition triggers a focus-out, committing incomplete preedit text.
+调试技巧：
 
-**Instruments**:
-- Log `compositionstart`, `compositionupdate`, `compositionend` sequence; confirm they fire in order without gaps.
-- Log the `data` field of each `compositionupdate`; a sudden empty string signals a forced commit.
+```python
+for ch in text:
+    print(ch, hex(ord(ch)))
+```
 
-## Cursor Position Drift After IME Commit
+浏览器输入法问题要关注：
 
-**Symptom**: After confirming a CJK word, the cursor jumps to the wrong position or the selection collapses.
+- `compositionstart`
+- `compositionupdate`
+- `compositionend`
+- `beforeinput`
+- `input`
 
-**Cause candidates**:
-- DOM mutation during composition: React/Svelte/Vue re-rendering while `isComposing` is true will reset the selection. Batch state updates and flush only on `compositionend`.
-- Counting bytes instead of code points in position math: CJK characters are multi-byte in UTF-8. Use `Array.from(str).length` or `[...str].length`, not `str.length`, for character-level offsets in positions.
-
-## Emoji ZWJ Sequence Splitting
-
-**Symptom**: Multi-person or profession emoji (e.g. `👩‍🚒`) renders as two or three separate emoji, or the ZWJ (`U+200D`) appears as a visible character.
-
-**Cause candidates**:
-- String sliced at byte offset: `str.slice(0, n)` splits a ZWJ sequence if `n` falls inside the sequence. Use `Intl.Segmenter` with `granularity: 'grapheme'` to split at grapheme cluster boundaries.
-- Font does not support the sequence: the font renders each code point individually. Verify with `canvas.measureText` or by checking which font is actually used via `document.fonts`.
-- Serialization strips ZWJ: some JSON encoders normalize or escape `U+200D`. Verify the raw bytes of the stored string.
-
-**Test**: `[...'👩‍🚒'].length` should be 1 (one grapheme cluster). If it returns 3, the runtime is iterating code points, not grapheme clusters.
-
-## `compositionend` / `keydown` Event Ordering
-
-**Symptom**: The action bound to Enter or Tab fires during IME confirmation, submitting incomplete input.
-
-**Cause**: On macOS + some IMEs, the sequence is `compositionend` → `keydown(Enter)`. On Windows + other IMEs it can be `keydown(Enter)` → `compositionend`. Code that blocks Enter only when `isComposing` is true will break on the macOS ordering because `isComposing` is already false when `keydown` fires.
-
-**Fix**: Track composition state with a boolean flag set on `compositionstart`, cleared on `compositionend`. Guard the Enter handler with that flag rather than `event.isComposing`.
-
-## macOS Text System vs Webview Conflict
-
-**Symptom**: Undo (`Cmd+Z`) reverts individual IME preedit characters instead of committed words, or system text shortcuts (Cmd+Shift+Left for word selection) behave differently inside vs outside the webview.
-
-**Cause**: WKWebView has its own text system that partially overlaps with NSTextView conventions. Tauri's `preventDefaultFor` config can suppress system shortcuts; check `tauri.conf.json` (v1) or `app.json` (v2) for any `preventDefault` rules that may be too broad.
-
-## Quick Checklist
-
-- [ ] `isComposing` checked before acting on keyboard events?
-- [ ] No DOM mutation while `isComposing` is true?
-- [ ] String position math uses grapheme clusters, not bytes or code points?
-- [ ] ZWJ sequences verified with `Intl.Segmenter`?
-- [ ] Enter/Tab guard uses a flag set by `compositionstart`, not `event.isComposing`?
-- [ ] `tauri.conf.json` `preventDefaultFor` not too broad?
+不要在 composition 期间做会破坏候选词的格式化、自动提交或光标跳转。

@@ -1,33 +1,27 @@
 # Durable Context Preflight
 
-Shared preamble for every skill that reads optional memory or prior-decision context. Each `SKILL.md` links to this file and then adds skill-specific guidance.
+持久上下文可以帮助理解用户偏好、旧决策和可复用模式，但它永远低于当前证据。
 
-## When to read durable context
+读取顺序：
 
-Run the durable context steps only when one of these holds:
+1. 先读当前请求、当前仓库、当前 diff、当前日志、当前测试输出。
+2. 只有当任务可能依赖历史偏好或旧决策时，再读取持久上下文摘要。
+3. 如果摘要指向具体技能记忆或回放摘要，只读取 1 到 2 个最相关文件。
+4. 默认不要读取 raw transcripts；只有当前摘要不够、且必须找精确命令或错误文本时才进入原始记录。
 
-- The user mentions memory, preview, previous decisions, or a prior conclusion.
-- The user provides a memory path.
-- The current project exposes an obvious local memory summary (for example, a `MEMORY.md` or a documented memory directory).
+类型映射：
 
-Do not hard-code machine-specific memory roots, and do not read raw transcripts.
+| Context type | Use it for |
+|---|---|
+| decision | 用户已经确认过的方向、边界、默认选项 |
+| preference | 输出风格、验证习惯、风险偏好 |
+| principle | 可跨项目复用的硬规则 |
+| pattern | 已被验证过的工作流、调试路径、发布检查 |
+| learning | 旧失败带来的注意事项 |
 
-## Read order and budget
+约束：
 
-Read durable context in this order: user-provided path, current project scope, then global preferences. List titles first, then open at most 1-2 relevant summaries. Treat cross-project entries as transferable patterns only.
-
-## Memory distillation redaction gate
-
-When turning prior chats, durable memory, or cross-project notes into reusable Waza guidance, promote only workflow rules. Strip raw transcript text, screenshots, local paths, project-specific commands, issue or PR numbers, release tags, commit hashes, private product boundaries, paid or license details, support routing, user names, and one-machine state.
-
-If an example is necessary, use neutral placeholders such as `ExampleCLI`, `ExampleApp`, `<issue>`, `<release>`, or `<command>`. Do not copy a private answer, maintainer reply, screenshot observation, or project-specific incident as a durable rule.
-
-## Memory type mapping
-
-- `decision`, `preference`, and `principle` are constraints for the current task (planning, design, review, debugging, voice, audit expectations, etc., depending on skill).
-- `pattern` and `learning` are reusable checks or hypotheses.
-- `fact` must be verified against current state before it affects the output.
-
-Current code, diff, screenshots, logs, tests, docs, CI, remote state, and live probes always override memory. If they conflict with a remembered claim, name the conflict and follow current state.
-
-Each skill adds its own paragraph below this reference for skill-specific overrides and constraints.
+- Current repo state, logs, tests, screenshots, remote state override memory.
+- 记忆里的事实如果可能过期，必须用当前环境验证；不能验证时要说明这是旧记忆。
+- 不把私有记忆里的路径、项目名、人员、token、内部系统写进公共技能或文档。
+- 引用记忆是为了减少重复沟通，不是为了绕过用户本轮给出的限制。

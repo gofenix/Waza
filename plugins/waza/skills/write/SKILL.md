@@ -1,209 +1,125 @@
 ---
 name: write
-description: "Rewrites and polishes prose in Chinese or English, removes AI-like wording, and reviews product localization copy while preserving intent for drafts, docs, release notes, launch copy, and social posts. Use when users ask 帮我写/改稿/润色/去AI味/写一段/审稿/本地化文案/tweet/rewrite/proofread. Not for code comments, commit messages, or inline docs."
+description: "改写和润色中英文自然语言，去掉 AI 味，审阅产品本地化文案，并保留原意。Use when users ask 帮我写/改稿/润色/去AI味/写一段/审稿/本地化文案/tweet/rewrite/proofread. Not for code comments, commit messages, or inline docs."
 when_to_use: "帮我写, 改稿, 润色, 去AI味, 写一段, 审稿, 文档review, 本地化文案, 多语言文案, i18n copy, localization copy, check this document, 推特, twitter, X推文, tweet, social post, 连贯性, 段落连贯, draft, edit text, proofread, sound natural, polish, rewrite"
-dispatch_intent: "Writing, editing prose, polish, release notes, launch/social copy, remove AI tone"
+dispatch_intent: "写作、改稿、润色、release notes、launch/social copy、去 AI 味"
 ---
 
-# Write: Cut the AI Taste
+# Write: 去掉 AI 味
 
 Prefix your first line with 🥷 inline, not as its own paragraph.
 
-**Update check (non-blocking).** Before starting, run `bash ../../scripts/check-update.sh` once; if it prints a line, relay it to the user, then continue. It runs at most once a day, only reads a public version file, sends no data, and fails silently.
+**Update check（非阻塞）**。开始前运行一次 `bash ../../scripts/check-update.sh`；如果它输出提示，把那一行转告用户，然后继续。脚本每天最多读一次公开版本文件，不发送本地数据，失败时静默。
 
-Strip AI patterns from prose and rewrite it to sound human. Do not improve vocabulary; remove the performance of improvement.
+把文案改到自然、有人的判断，但不炫技。不要“提升词汇”，要去掉表演式改进。
 
 ## Outcome Contract
 
-- Outcome: the prose preserves the author's intent while sounding natural for its audience and surface.
-- Done when: meaning, factual claims, and structure are preserved unless the user asked to change them, and AI-like wording is removed.
-- Evidence: supplied text, target audience, project style references, release or product state, and requested language.
-- Output: the edited prose only, unless the user asked for notes, variants, or review comments.
+- Outcome: 文案保留作者意图，同时更符合目标读者、场景和语言习惯。
+- Done when: 除非用户要求改变事实或结构，否则意义、事实主张和结构被保留，AI 腔被去掉。
+- Evidence: 用户提供的文本、目标读者、项目风格参考、当前 release/product 状态和目标语言。
+- Output: 默认只给改好的文案；只有用户要求时才给 notes、variants 或 review comments。
 
 ## Core Stance
 
-This skill is a catalog of smells, not a checklist to run top to bottom. Use it to recognize AI taste, then make judgment calls. The reference files (especially `write-zh.md`) are long because they accumulated examples over many sessions; do not try to apply every rule to every text. Applying more rules is not doing a better job.
+这个技能是气味目录，不是逐条执行 checklist。识别 AI 味后做判断：该删就删，该保留就保留。
 
-- **Over-editing is failure, equal to under-editing.** If a sentence is already natural, clear, and stable, leave it. Most polish is subtraction (cut repetition, summary-tone, restated conclusions), not phrase-by-phrase replacement.
-- **The author's voice wins.** Keep the author's existing colloquial words, cadence, and stance. When a rule conflicts with a deliberate authorial or genre choice (a question title in a narrative piece, a list the author wants kept), the author wins. Rules are defaults, not laws.
-- **Banned-phrase lists and replacement tables are examples, not find-and-replace.** A flagged word that reads naturally in context stays. Match the smell, not the string.
-- **Prefer fewer, stronger edits.** Three changes that matter beat thirty mechanical swaps that flatten the voice.
+- **过度编辑和编辑不足一样失败**。句子已经自然、清楚、稳定时，不要动。
+- **作者声音优先**。保留作者原有口语、节奏和立场。规则是默认值，不是法律。
+- **禁用词表和替换表只是例子**。看气味，不做机械 find-and-replace。
+- **少而准**。三个有效改动比三十个机械替换更好。
 
-When distilling a new lesson into this skill, fold it into an existing principle instead of appending another banned phrase. This skill must not grow monotonically; collapsing specifics back into principles is part of maintaining it.
+把新经验沉淀进技能时，合并到已有原则，不要无限追加同义禁用词。
 
 ## Pre-flight
 
-1. **Text present?** If the user gave only an instruction with no actual prose to edit, ask for the text in one sentence. Do not proceed.
-2. **Audience locked?** If the intended audience is unclear and cannot be inferred from the text (blog reader vs RFC vs email), ask before editing. Junior engineer and senior architect prose should read completely different.
-3. **Language detected from the text being edited**, not the user's command:
-   - Contains Chinese characters + release notes or social post mode → load `references/write-zh-release-notes.md`
-   - Contains Chinese characters + bilingual or translation review → load `references/write-zh-bilingual.md`
-   - Product/site/app localization review across multiple locales → load `references/write-product-localization.md`; also load `references/write-zh-bilingual.md` when Chinese copy is present
-   - Contains Chinese characters (default prose) → load `references/write-zh-prose.md` (quick rules); load `references/write-zh.md` for the full AI-taste pattern catalog
-   - Otherwise → load `references/write-en.md`
+1. **Text present?** 用户没给要改的文本时，只问一句让他贴文本。
+2. **Audience locked?** 读者不能从文本推断时先问。写给初级工程师和资深架构师完全不同。
+3. **Language detected from the text being edited**，不是从用户命令判断：
+   - 中文 + release notes 或社交发布：读取 `references/write-zh-release-notes.md`
+   - 中文 + bilingual 或翻译审阅：读取 `references/write-zh-bilingual.md`
+   - 产品/网站/app 本地化：读取 `references/write-product-localization.md`；有中文时也读 `references/write-zh-bilingual.md`
+   - 默认中文 prose：读取 `references/write-zh-prose.md`；需要完整模式库时读 `references/write-zh.md`
+   - 其他情况：读取 `references/write-en.md`
 
-Read the loaded reference file. Then edit. No summary, no commentary, no explanation of changes unless explicitly asked.
+读取对应参考后再改。默认不解释修改。
 
 ## Durable Context Preflight
 
-See [rules/durable-context.md](../../rules/durable-context.md) for when to read durable context, the read-order budget, and the memory-type mapping.
-
-For `/write`, voice and format constraints are `decision`, `preference`, and `principle` entries; editing checks are `pattern` and `learning`. The supplied text, audience, project docs, current release state, and source material override memory. Durable preferences can set brevity, tone, and social-post shape. They do not override the hard rule to edit in place, keep meaning intact, and avoid change lists unless the user explicitly asks.
+参见 [rules/durable-context.md](../../rules/durable-context.md)。对 `/write` 来说，旧记忆可以提供声音、格式和用户偏好；the supplied text, target audience, project docs, current release state, and source material override memory.
 
 ## Hard Rules
 
-- **Meaning first, style second.** If removing an AI pattern would change the author's intended meaning, keep the original.
-- **No silent restructuring.** Do not reorganize headings, reorder paragraphs, or merge sections unless structural changes are explicitly requested. Edit in place. (Exception: Long-form Article Mode treats structural cuts and merges as in-scope, since structure is the main problem there; it still proposes them as change-points first instead of doing them silently.)
-- **Artifact-grounded claims.** For launch copy, release notes, social posts, product pages, and public replies, ground factual claims in real source material: current app behavior, runnable artifact, screenshot, product page, release page, changelog, issue/PR, or user-provided draft. Do not present handoffs, plans, old memory, or stale screenshots as current product truth, and do not turn concrete product evidence into generic marketing language.
-- **No em-dash.** Never produce em-dash (U+2014 `—`) or en-dash (U+2013 `–`) in Chinese or English output. Em-dash is the strongest AI-tone fingerprint in this style of writing. Use commas, periods, colons, semicolons, or parentheses to break clauses. Hyphen-minus (`-`) inside compound words is allowed; replace it with a space or a period when possible. When editing a draft that contains em-dashes, replace every one before returning the text.
-- **Stop after output.** Deliver the rewritten text. Do not append a list of changes, a justification, or a closer. (Exception: Long-form Article Mode returns change-points for review instead of a rewritten blob; see that mode.)
+- **Meaning first, style second.** 去 AI 味会改变作者意思时，保留原文意思。
+- **No silent restructuring.** 不擅自重排标题、段落、顺序或合并章节，除非用户要求。Long-form Article Mode 例外。
+- **Artifact-grounded claims.** Launch copy、release notes、产品页和 public reply 的事实必须来自当前产品、可运行产物、截图、release page、changelog、issue/PR 或用户材料。
+- **No em-dash.** 不输出 U+2014 或 U+2013。用逗号、句号、冒号、分号或括号。
+- **Stop after output.** 默认只给改好的文本，不追加解释、修改列表或收尾话。
 
 ## Long-form Article Mode
 
-Activate when: editing a Markdown article or file over ~300 lines, or one with multiple `##` sections plus tables and images (technical long-reads, blog posts, deep dives).
+长文（约 300 行以上，或多个 `##`、表格和图片）里，最大问题通常是结构重复，而不是单句不自然。
 
-In long-form, the dominant problem is usually structural: the same checklist repeated across sections, prose that re-reads a table sitting right above it, list bloat, whole redundant sections. Sentence-level AI taste is the smaller half. A single in-place polish pass cannot see or fix the structural half, which is why a plain `/write` on a long article feels like it changed wording but left the bloat. This mode therefore overrides two Hard Rules: structural cuts and merges are in-scope, and the output is change-points for review, not a rewritten blob.
+流程：
 
-Workflow:
+1. **Map first, read-only.** 先读完整文章，列出 `##` 章节、表格、列表和图片。标出三类问题：跨章节重复、复读表格、整段/整节冗余。
+2. **Propose cuts as change-points.** 每个结构删改都给 before -> after，让用户选。不要静默删除整节。
+3. **Then line-level de-AI.** 用户确认结构点后，再逐节做句子级去 AI 味。
+4. **Output is change-points.** 默认给变更点，不直接吐整篇重写稿。用户说“直接改”时才输出完整改稿。
 
-1. **Map first, read-only.** Before editing anything, read the whole article and list every `##` section, table, list, and image. Flag three structural problems: cross-section repetition (same checklist / judgment list / core claim in 2+ sections), table re-reading (a section whose prose walks the rows of the table above it), and whole redundant sections or paragraphs.
-2. **Propose cuts as change-points.** Show before to after for each structural cut or merge and let the user pick the subset. Never delete a whole section or paragraph silently; confirm first, since it may hold a fact found nowhere else (see `references/write-zh.md` 删段之前先确认信息量).
-3. **Then line-level de-AI**, section by section, per `references/write-zh.md`.
-4. **Output is change-points, not a blob.** Show what changed so the user can review and keep their own hand-edits. Only return fully rewritten text when the user says 直接改 / just rewrite.
-
-Do not single-pass rewrite a 40k-character article: it silently overwrites the author's hand-tuned phrasing and cannot be reviewed as a diff. See `references/write-zh.md` 结构级重复与表格复读（长文专项）for the matching content rules.
+不要单轮重写 4 万字文章，那会覆盖作者手调的表达，也很难 review。
 
 ## Bilingual Review Mode
 
-Activate when: mixed Chinese/English, "Chinese copywriting", "bilingual consistency", "release notes"
+用于中英混排、Chinese copywriting、bilingual consistency、release notes。
 
-**Chinese rules** (from https://github.com/mzlogin/chinese-copywriting-guidelines):
-- Space between Chinese and English characters (CN文字EN → CN 文字 EN)
-- No mixing of punctuation (Chinese uses 、。？！；：, not commas/periods)
-- Consistent terminology across all instances
+规则：
 
-**English in Chinese documents**: Flag unexplained English, suggest translation or add context.
+- 中文和英文之间通常留空格，品牌名、命令、路径和代码除外。
+- 不把英文术语硬翻译成别扭中文；必要时保留英文。
+- 中英版本要事实一致、语气一致、编号一一对应。
+- Release notes 要工程师可读，不做营销腔。
+- 社交文案可以更口语，但不能夸大事实。
 
-**Bilingual pairs**: Confirm EN and CN versions convey the same meaning; mark translation loss.
+## Product Localization Mode
 
-## Product Localization Review Mode
+用于产品 UI、网站、应用商店、设置项、按钮、空状态、错误提示等本地化。
 
-Activate when: "本地化文案", "多语言文案", "localization copy", "i18n copy", product/site/app strings, release feed copy, runtime catalog, or a user asks whether localized copy feels native.
+检查：
 
-Load `references/write-product-localization.md`. If Chinese is one of the locales, also load `references/write-zh-bilingual.md`.
+- 文案是否符合控件大小和状态。
+- 是否把功能承诺说过头。
+- 中文是否自然，英文是否像 native product copy。
+- 多语言是否保持同一事实，不逐字硬译。
+- 错误提示是否告诉用户下一步，而不是只解释失败。
 
-Default workflow:
+参考 `references/write-product-localization.md`。
 
-1. Separate surfaces first: release feed, website pages, docs/help, runtime strings, legal/privacy copy, and generated pages may have different locale coverage and source files.
-2. Preserve factual structure: versions, dates, links, item order, placeholders, and product behavior remain fixed unless the user asks to change them.
-3. Review by locale artifacts, not by English meaning alone. Missing accents, ASCII fallbacks, literal possessives, stale locale paths, and mechanical plural or apostrophe errors are first-class issues.
-4. After broad cleanup, run a second pass for replacement damage. Do not trust accent sweeps or glossary replacements until the generated output has been checked.
-5. When asked to implement, patch the source localization files and rebuild generated pages. When asked only to review, return findings grouped by surface and severity.
+## English Editing
 
-## Release Note Template Mode
+英文编辑时不要把文字变得更“高级”。目标是更自然、更准确、更像人写。
 
-Activate when: "release", "changelog", "version", "release notes"
+优先：
 
-Generate from commit messages:
-- **Breaking Changes**
-- **New Features**
-- **Fixes & Improvements**
-- **Deprecations**
+- 删掉总结腔和过度连接词。
+- 把抽象名词改回具体动作。
+- 保留作者的直接语气。
+- 避免 em-dash、过密形容词和“not only... but also...”式模板。
 
-Format: target-project style by default. If no project style is available, use numbered items with bold labels, one sentence on user effect, and bilingual output only when the project already uses bilingual release notes.
-
-### Release Notes Pre-flight
-
-Before drafting, gather style references:
-
-1. Read the target project's `CLAUDE.md` for its Release Convention / Release Flow section.
-2. Read the target project's existing release source as a style, length, and density reference: changelog, release notes, registry page, update feed, or platform release page.
-3. For GitHub projects, `gh release view --json body -R <owner>/<repo>` is the preferred way to read the most recent release when `gh` is available. If the project is not on GitHub, use the release source named by the project docs or user request.
-4. If the user mentions comparing with a sibling project's release style, ask for the target identifier or release URL before fetching it.
-5. Match the reference release's item count, sentence length, and tone. Do not invent a new format.
-6. Keep each release-note item to one sentence unless the reference project clearly does otherwise. Do not add emoji to release prose unless the target surface is explicitly a reaction or celebratory social surface.
-
-### Release Notes Content Rules
-
-- **Group by user-perceivable feature**, not by internal taxonomy. "Polish", "细节打磨", "Misc improvements", "Chores" are not categories users can act on. Group by product surface (Clean / Uninstall / Status / Settings) or by user-visible verb (Faster startup / New keyboard shortcut / Fixed crash on M3).
-- **Extract from `git log <last-tag>..HEAD`** rather than from memory. Read every `feat:` and `fix:` commit; do not omit small items just because they look minor in commit form (iOS wrapper support, Dock cleanup, AV-vendor protection boundary are not "minor" from a user point of view).
-- **One sentence per item, naming the user-visible change**, not the implementation. "Use `CKDownloadQueue` observer for App Store updates" is not a release note; "App Store updates now run inside the app instead of opening App Store" is.
-- **Bilingual structure**: when the project ships bilingual release notes, put the English block and the Chinese block as two parallel sections inside the same release item; do not interleave per bullet. For HTML-capable update-feed CDATA, separate language blocks with headings so the rendered update window does not collapse them together.
-- **No em-dash** in release prose (covered by the Hard Rule). Use Chinese full-width punctuation in Chinese blocks, ASCII in English blocks.
-
-## Public Reply Mode (GitHub issue / PR)
-
-Activate when: "回复 issue", "reply to PR", "comment on #N", "回 issue", or the user asks for the text of a GitHub issue / PR comment.
-
-Five hard rules for the reply body:
-
-1. **Open with `@<reporter>` + one thanks line.** Match the reporter's language (Chinese → "感谢反馈" / English → "thanks for the detailed report"). No exclamation mark. No emoji. No "🙏".
-2. **Then state the cause in one sentence, the impact in one sentence.** No multi-paragraph background, no internal symbol names, no walk-through of the fix.
-3. **Then state the ship state**, exactly one of: already shipped in v<X.Y.Z>, fixed on `main` and going out in the next release, planned for v<X.Y.Z>, not planned (with one-line reason and an alternative path). Do not write "already shipped" without release evidence in the current turn.
-4. **Two paragraphs maximum**, separated by one blank line. No bullet lists, no section headers, no code blocks except a one-line command when actually needed.
-5. **No em-dash.** Use commas, periods, colons. (Covered by the Hard Rule, surfaced again because issue replies attract this pattern.)
-
-The reply is the final user-facing text, not an agent log. Do not write "刚才我判断错了", "前面回复有误", "I re-read it and changed the comment", or any meta narration about your own process. If editing an existing maintainer comment, replace it with the clean final wording as if it were the only comment the user will read.
-
-Before posting, re-read the live issue / PR with `gh issue view <num>` or `gh pr view <num>`. Do not reply from memory; titles, states, and author languages change between sessions.
-
-For paid / subscribed users, acknowledge the purchase relationship and the inconvenience in one phrase, then state the boundary. Do not over-explain. When the current product cannot support their setup, suggest the safest practical path (upgrade macOS, wait for the next release, provide logs, refund route) without arguing.
-
-Closing rule: when closing as `completed`, the comment must independently explain what was fixed and the expected release. When closing as `not planned`, the comment must independently explain the current boundary and an alternative path. Do not rely on prior thread context as the explanation.
-
-## Document Review Mode
-
-Activate when: PDF, document, white paper, "review this document", "check this document", "审稿"
-
-Review checklist:
-- **Privacy scan**: Detect PII (names, companies, employment dates, salary hints, location details). Hard stop if any text implies job seeking, competitor info, or personal data leakage.
-- **Tone consistency**: Flag voice shifts, register mismatches, formulaic phrasing. Check for AI patterns using the loaded `write-zh.md` or `write-en.md` rules.
-- **Bilingual validation**: For CN/EN pairs, confirm translation accuracy and terminology consistency. Apply Bilingual Review Mode rules.
-- **Rendering check**: Placeholder text remaining (`Lorem ipsum`, `TODO`, `[TBD]`), broken image links.
-- **Durable-doc scan**: If the document is a review report, scorecard, or diagnostic snapshot, flag dated claims, stale line references, private paths, repo-specific commands, and current-score framing. Recommend extracting stable rules instead of preserving the snapshot as evergreen guidance.
-
-Output format: same as prose rewrite, but append `privacy: clear / N issues found` after the reviewed text.
-
-## Paragraph Coherence Mode
-
-Activate when: "连贯性", "段落连贯", "可读性", "coherence", "flow check", "段落顺不顺"
-
-Do not rewrite. Instead, work through each paragraph in sequence:
-1. Flag transitions that abruptly shift topic without a signal.
-2. Flag paragraphs where the opening sentence does not follow from the previous paragraph's close.
-3. Flag rhythm issues: monotone sentence length (all short or all long across a whole paragraph).
-4. Suggest the minimal fix for each: one word, one reordered clause, one bridging sentence.
-
-Output: a numbered list of issues, each with the paragraph location and a one-line fix suggestion. Then ask if the user wants any applied.
-
-## Tweet / Social Post Mode
-
-Activate when: "推特", "twitter", "X推文", "tweet", "social post", "折叠长度", "长文推特", "发文"
-
-Apply the five announcement rules for product-engineer projects when the project context or prior artifact shows this style:
-1. **Lead with community**: open with the social anchor (star count, user thanks, whose feedback drove the fix). Changes follow, not lead.
-2. **Highlights over completeness**: pick 2 to 4 of the most interesting changes. Dropping whole items is fine.
-3. **UX framing**: phrase each point as "你用它的时候..." or "有一种...的感觉", not "这个工具做了...".
-4. **One stance**: include at least one opinionated sentence revealing why decisions were made.
-5. **Native Chinese rhythm**: use idiomatic phrasing. Avoid translation-sounding terms.
-
-Close casually with an invitation, not a CTA. End with one short sentence inviting readers to try, not "立即升级".
-
-For other engineering projects or English posts, apply the same structure (community lead, highlights, UX framing, one stance, casual close) adapted to the project's voice.
-
-## Gotchas
-
-| What happened | Rule |
-|---------------|------|
-| Reorganized headings without being asked | Do not restructure; edit in place unless structure changes are explicitly requested |
-| Appended a "changes made" list after the rewrite | Output is the edited text only. No changelog, no commentary. |
-| Used formal register for a blog draft | Match the target audience's register. Blog is conversational, not academic. |
-| Applied Chinese/English spacing rules to a pure-English text | Bilingual spacing rules (半角/全角) only apply when the text mixes Chinese and English |
-| Polished the user's voice into generic launch copy | Preserve the author's cadence and stance. Use real product artifacts to sharpen facts, not to replace the voice. |
-| Drafted release or social copy from memory or a handoff | Read the current release page, changelog, issue/PR, runnable artifact, product page, screenshot, or supplied source before making factual claims. |
-| Wrote launch copy in one pass without checking the live screenshots | Iterate: draft, compare against the real product screenshot or page, tighten wording to match what ships, repeat until copy and artifact agree |
-| Polished a review report until it sounded timeless | Keep snapshots labeled as snapshots, or distill them into stable rules. Do not make dated claims sound evergreen |
+参考 `references/write-en.md`。
 
 ## Output
 
-Return only the edited prose. If the text was truncated or if multiple versions were possible, note that in one sentence after the body. Otherwise, no wrapper, no preamble, no postscript.
+默认输出改好的文本本身。用户要求 review 时，输出：
+
+```text
+Verdict: ...
+
+Main issues:
+- ...
+
+Suggested rewrite:
+...
+```
+
+用户要求多个版本时，最多给 3 个，并说明每个版本的使用场景。

@@ -1,84 +1,21 @@
-Work from the pasted data only.
+# Control Inspector
 
-Input bundle: settings.local.json, GITIGNORE, CLAUDE.md (global), CLAUDE.md (local), hooks, MCP FILESYSTEM, MCP ACCESS DENIALS, allowedTools count, skill descriptions, CONVERSATION EXTRACT
+用于 `/health` 深挖 agent 控制面：权限、hooks、MCP、工具可达性、运行时配置。
 
-Tier: [SIMPLE / STANDARD / COMPLEX]. Use the matching tier only.
+检查：
 
-## Part A: Control + Verification Layer
+- 权限是否过宽或过窄，是否和项目风险匹配。
+- hooks 是否存在、可执行、失败时是否可见。
+- MCP server 是否可达，失败是否有清晰降级。
+- 配置是否在多个文件里重复定义并互相覆盖。
+- 验证命令是否真的会运行，而不是只写在文档里。
+- agent 是否被要求使用不存在的工具或插件。
 
-Hooks checks:
-- SIMPLE: Hooks are optional. Only flag broken ones, for example wrong file types.
-- STANDARD+: PostToolUse hooks expected for the primary languages of the project.
-- COMPLEX: Hooks expected for all frequently-edited file types found in conversations.
-- ALL tiers: If hooks exist, verify schema:
-  - Each entry needs `matcher` and a `hooks` array
-  - Each hook needs `type: "command"` and `command`
-  - File path may be available via `$CLAUDE_TOOL_INPUT_FILE_PATH`
-  - Missing `matcher` fires on all tool calls
-- ALL tiers: Flag full test suites on every edit, prefer fast checks for immediate feedback.
-- ALL tiers: Flag commands without output truncation, unbounded output floods context.
-- ALL tiers: Flag commands without explicit failure surfacing.
+诊断命令示例：
 
-allowedTools hygiene, ALL tiers:
-- Flag genuinely dangerous operations only: sudo *, force-delete root paths, *>* and git push --force origin main
-- Do NOT flag: path-hardcoded commands, debug/test commands, brew/launchctl/maintenance commands -- these are normal personal workflow entries
+```bash
+git status --short --branch -uall
+find . -maxdepth 3 -name AGENTS.md -o -name CLAUDE.md
+```
 
-Credential exposure, ALL tiers:
-- Project-scoped secrets are [!] only if committed, shared, or stored in non-gitignored project files
-- Treat `ignored only by non-project rule (...)` in the GITIGNORE section as insufficient; recommend a repo-local ignore rule.
-- Do NOT flag user-scoped files like `~/.mcp.json` just because credentials are intentionally stored there
-
-MCP configuration, STANDARD+:
-- Check enabledMcpjsonServers count, >6 may impact performance
-- Check filesystem MCP has allowedDirectories configured
-- If `~/.claude/projects/.../tool-results/*` denials show breakage, output a `python3` one-liner that appends the narrowest missing path
-
-Model name validation, ALL tiers:
-- Check settings.local.json for `model` fields. Valid model IDs follow the pattern `claude-*` (e.g., `claude-opus-4-6`, `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`). Any non-`claude-*` model ID (e.g., a provider-specific alias or outdated name) is [!] -- a wrong model name silently wastes the entire session with no output.
-- If a model name looks like a third-party alias or contains unusual characters, flag it for manual verification.
-
-Prompt cache hygiene, ALL tiers:
-- Check CLAUDE.md or hooks for dynamic timestamps/dates in system context, they break prompt cache
-- Check if hooks or skills non-deterministically reorder tool definitions
-- Flag mid-session model switches like Opus→Haiku→Opus, they rebuild cache and can cost more
-- If model switching is detected, recommend subagents instead
-
-Three-layer defense consistency, STANDARD+:
-- For each critical rule in CLAUDE.md NEVER/ALWAYS items, check if:
-  1. CLAUDE.md declares the rule: intent layer
-  2. A Skill teaches the method/workflow for that rule: knowledge layer
-  3. A Hook enforces it deterministically: control layer
-- Flag rules that only exist in one layer -- single-layer rules are fragile:
-  - CLAUDE.md-only rules: Claude may ignore them under context pressure
-  - Hook-only rules: no flexibility for edge cases, no teaching
-  - Skill-only rules: no enforcement, no always-on awareness
-- Priority: focus on safety-critical rules: file protection, test requirements, deploy gates
-
-Verification checks:
-- SIMPLE: No formal verification section required. Only flag if Claude declared done without running any check.
-- STANDARD+: CLAUDE.md should have a Verification section with per-task done-conditions.
-- COMPLEX: Each task type in conversations should map to a verification command or skill.
-
-Subagent hygiene, STANDARD+:
-- Flag Agent tool calls in hooks that lack explicit tool restrictions or isolation mode.
-- Flag subagent prompts in hooks with no output format constraint -- free-form output pollutes parent context.
-
-## Part B: Behavior Pattern Audit
-
-Data source: up to 3 recent conversation files. Only flag clear evidence. Tag each finding [HIGH CONFIDENCE] or [LOW CONFIDENCE].
-
-This section owns repeated corrections, missing patterns, and observable rule violations. Do not duplicate Agent 1's rule-design or context-budget recommendations here.
-
-1. Rules violated: quote the NEVER/ALWAYS rule and observed violation. No inference.
-2. Repeated corrections: same issue corrected in at least 2 conversations.
-3. Missing local patterns: project-specific behaviors reinforced in conversation but missing from local CLAUDE.md.
-4. Missing global patterns: cross-project behaviors missing from ~/.claude/CLAUDE.md.
-5. Skill frequency, STANDARD+: only report directly observed usage. With fewer than 3 sessions, mark [INSUFFICIENT DATA]. For verified <1/month skills, retire them to AGENTS.md docs.
-6. Anti-patterns: only flag what is directly observable:
-   - Claude declaring done without running verification
-   - User re-explaining same context across sessions -- missing HANDOFF.md or memory
-   - Long sessions over 20 turns without /compact or /clear
-
-Return bullet points under two sections:
-[CONTROL LAYER: hooks issues | allowedTools to remove | cache hygiene | three-layer gaps | verification gaps | subagents issues]
-[BEHAVIOR: rules violated | repeated corrections | add to local CLAUDE.md | add to global CLAUDE.md | skill frequency | anti-patterns (tag each with confidence level)]
+输出时给出可复制的下一步命令，不要只说“检查配置”。

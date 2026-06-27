@@ -1,45 +1,34 @@
-# Design Tokens: Color and Typography
+# Design Tokens
 
-Motion rules live in [design-reference.md](./design-reference.md) under Animation and Motion Specifics. This file owns color and typography only.
+当同类 spacing、size、radius、color 被重复调参时，用 token 收拢。
 
-## Color System: OKLCH Rules
+## Spacing
 
-- Use OKLCH instead of HSL. OKLCH is perceptually uniform: equal numeric changes produce equal perceived changes across the spectrum.
-- Reduce chroma as lightness approaches the extremes. At 85% lightness, chroma around 0.08 is enough; pushing to 0.15 looks garish.
-- Tint neutrals toward the brand hue with a chroma of 0.005 to 0.01.
-- 60-30-10 is about visual weight, not pixel count: 60% neutral/surface, 30% secondary text and borders, 10% accent.
-- Never use gray text on a colored background. Use a shade of the background hue at reduced lightness instead.
+- 外层容器 padding 默认和内部 gap 同源。
+- 常用阶梯：4、8、12、16、24、32、48。
+- 同一组件内不要出现多个只差 1 到 2px 的 magic value。
+- 如果调了三轮还不顺，先减少独立变量，再讨论具体数值。
 
-## Theme Matrix
+## Typography
 
-| Context | Direction | Reason |
-|---|---|---|
-| Trading or analytics dashboard, night-shift use | Dark | High data density; reduced glare during long sessions |
-| Children's reading or learning app | Light | Welcoming, low fatigue |
-| Enterprise SRE or observability tool | Dark | Operator context; dark surfaces read at a glance in low-light rooms |
-| Weekend planning, recipes, journaling | Light | Ambient daytime use; light feels casual |
-| Music player or media browser | Dark | Content-forward; dark surfaces recede and let media pop |
-| Hospital or clinical patient portal | Light | Trust and legibility are paramount |
-| Vintage or artisanal brand site | Cream/warm light | Dark would clash with the analog material references |
+- 工具栏、状态栏、列表项里的切换状态使用同一字号。
+- 用 weight、color、opacity、icon 区分状态，不用字号。
+- 中文正文行高通常比英文略松。
+- 长按钮文案要允许换行、压缩布局或改短 copy，不靠 viewport font-size。
 
-If the answer is not obvious from context, default to light.
+## Radius
 
-## Reflex Fonts to Reject
+- 普通 card 默认 8px 或更小，除非项目设计系统另有规定。
+- 圆角越大，信息密度越低。工具型界面慎用大圆角。
 
-These fonts dominate training data. Using them signals no decision was made. The ban is on reflex use as a display face; informed product-UI use (e.g. Inter for a dense data table) is allowed when justified.
+## Color
 
-Reject: Inter, DM Sans, DM Serif Display, DM Serif Text, Outfit, Plus Jakarta Sans, Instrument Sans, Instrument Serif, Space Grotesk, Space Mono, IBM Plex Sans, IBM Plex Serif, IBM Plex Mono, Syne, Fraunces, Newsreader, Lora, Crimson Pro, Crimson Text, Playfair Display, Cormorant, Cormorant Garamond.
+- 每个 token 要有职责：background、surface、border、text、muted、accent、danger、success。
+- 不要让 accent 同时承担所有强调、状态和装饰。
+- 交互状态的对比度必须可辨。
 
-## Font Selection Procedure
+## Motion
 
-1. Write three words that describe the brand (e.g. "precise, minimal, fast").
-2. Name the three fonts you would reach for reflexively.
-3. Reject all three.
-4. Pick a typeface from a named foundry (Klim, Commercial Type, Colophon, Grilli Type, OH no Type, Village) or an open-source option with a clear personality. Be able to explain why in one sentence.
-
-## Typography Details
-
-- `text-wrap: balance` on headings and short text blocks; `text-wrap: pretty` on body paragraphs
-- `-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale` once on root layout (macOS only)
-- `font-variant-numeric: tabular-nums` for counters, timers, prices, number columns
-- Letter-spacing: roughly -0.022em for display sizes (32px+), -0.012em for mid-range (20-28px), normal at 16px and below
+- 动效先服务状态理解。
+- 不用速度掩盖布局抖动。
+- 同一交互族保持一致的 duration 和 easing。
